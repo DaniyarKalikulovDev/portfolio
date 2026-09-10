@@ -122,7 +122,7 @@
       z-index: 90;
       top: var(--frame-top);
       left: calc(20px + (100vw - 40px) * 5 / 6 + 5px);
-      padding: 10px 22px;
+      padding: 8px 18px;
       border: 1.5px solid #0a0a0a;
       outline: 0;
       background: var(--mint);
@@ -136,8 +136,11 @@
       transition: transform 320ms cubic-bezier(.34, 1.56, .64, 1);
     }
 
-    .contact-trigger:hover {
-      transform: scale(1.3);
+    @media (hover: hover) {
+      .contact-trigger:hover,
+      .scroll-hint:hover {
+        transform: scale(1.3);
+      }
     }
 
     .contact-trigger:focus-visible {
@@ -243,9 +246,39 @@
 
     .shelf-nav,
     .media-nav,
-    .detail-kicker,
-    .scroll-hint {
+    .detail-kicker {
       display: none;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      z-index: 3;
+      bottom: var(--frame-top);
+      left: var(--contact-inset, 25px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 1.5px solid #0a0a0a;
+      background: var(--mint);
+      color: #0a0a0a;
+      cursor: pointer;
+      outline: 0;
+      transform-origin: center;
+      transition: transform 320ms cubic-bezier(.34, 1.56, .64, 1);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .scroll-hint svg {
+      width: 14px;
+      height: 16px;
+    }
+
+    .scroll-hint:focus-visible {
+      outline: 2px solid #0a0a0a;
+      outline-offset: 2px;
     }
 
     .stage-flow {
@@ -1034,10 +1067,10 @@
       position: absolute;
       z-index: 52;
       top: var(--frame-top);
-      left: calc(50% - 40px);
+      left: calc(50% - 38px);
       display: grid;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       place-items: center;
       border: 1px solid rgba(255, 255, 255, .26);
       border-radius: 50%;
@@ -1294,10 +1327,8 @@
       }
 
       .scroll-hint {
-        position: absolute;
-        z-index: 3;
-        bottom: 25px;
-        left: 25px;
+        transform-origin: center;
+        transition: transform 320ms cubic-bezier(.34, 1.56, .64, 1);
       }
 
       .nav-chip[data-step="-1"] svg {
@@ -1588,7 +1619,6 @@
       }
     }
 
-    /* ---- Office screen ---- */
     .office-screen {
       position: relative;
       display: flex;
@@ -1642,7 +1672,6 @@
       white-space: nowrap;
     }
 
-    /* ---- About screen ---- */
     .about-screen {
       position: relative;
       width: 100%;
@@ -1919,7 +1948,6 @@
       }
     }
 
-    /* ---- Business card modal ---- */
     .card-overlay {
       position: fixed;
       z-index: 200;
@@ -1930,16 +1958,13 @@
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
+      will-change: opacity;
       transition: opacity 320ms ease, visibility 0s linear 320ms;
     }
 
     .card-overlay[data-open="true"] {
       visibility: visible;
       transition: opacity 320ms ease, visibility 0s linear;
-    }
-
-    .card-overlay[data-open="true"] .card-backdrop {
-      backdrop-filter: blur(8px);
     }
 
     .card-overlay[data-open="true"] {
@@ -1951,6 +1976,7 @@
       position: absolute;
       inset: 0;
       background: rgba(5, 7, 12, .74);
+      backdrop-filter: blur(8px);
     }
 
     .business-card {
@@ -2741,21 +2767,11 @@
 
       const narrowShelf = window.matchMedia("(max-width: 900px)");
 
-      /* An open project is a screen of its own, so the page behind it must not
-         move. `overflow: hidden` on the root is the usual way to say that and
-         it is quietly ignored by Safari on iOS, which is what let the page keep
-         scrolling on to the other screens with a book open. Taking the body out
-         of flow at its current offset holds everywhere: the document has
-         nothing left to scroll, and the offset is given back on the way out. */
       let lockedAt = 0;
 
       function lockPage() {
         if (body.hasAttribute("data-locked")) return;
         lockedAt = window.scrollY;
-        /* taking the body out of flow takes the scrollbar with it, and on the
-           platforms where that bar occupies real width the page would jump
-           sideways by exactly that much. Giving the width back as padding
-           keeps everything still. */
         const barWidth = window.innerWidth - document.documentElement.clientWidth;
         body.style.top = -lockedAt + "px";
         if (barWidth > 0) body.style.paddingRight = barWidth + "px";
@@ -2778,9 +2794,10 @@
       let swiped = false;
 
       const shelfDots = [...document.querySelectorAll("#shelfDots i")];
-      const shelfArrows = [...document.querySelectorAll(".nav-chip")];
+      const shelfArrows = [...document.querySelectorAll("#shelfNav .nav-chip")];
 
       function setShelfIndex(next) {
+        if (!Number.isFinite(next)) return;
         shelfIndex = Math.max(0, Math.min(cards.length - 1, next));
         shelf.style.setProperty("--shelf-index", String(shelfIndex));
         shelfDots.forEach((dot, index) => {
@@ -2977,7 +2994,7 @@
       const BOOK_MIN_TOP = parseFloat(
         getComputedStyle(document.documentElement).getPropertyValue("--frame-top")
       ) || 25;
-      const CROSS_LEFT_FROM_CENTER = 60;
+      const CROSS_LEFT_FROM_CENTER = 56;
       const CROSS_TO_TEXT_GAP = 20;
 
       function paintedBox(card) {
@@ -3205,6 +3222,61 @@
 
       stageFlow.addEventListener("scroll", syncFlowFade, { passive: true });
       window.addEventListener("resize", syncFlowFade);
+
+      const SCREEN_STEP_HOLD = 720;
+      const SCREEN_GESTURE_GAP = 90;
+      const screens = [...document.querySelectorAll(".office-screen, .about-screen, .stage")];
+      let screenHeldUntil = 0;
+      let screenLastWheel = 0;
+      let screenLastDelta = 0;
+
+      function ownScroller(node, direction) {
+        while (node && node !== document.body) {
+          if (node.nodeType === 1) {
+            const overflow = getComputedStyle(node).overflowY;
+            if (overflow === "auto" || overflow === "scroll") {
+              const room = direction > 0
+                ? node.scrollHeight - node.clientHeight - node.scrollTop
+                : node.scrollTop;
+              if (room > 1) return true;
+            }
+          }
+          node = node.parentElement;
+        }
+        return false;
+      }
+
+      function screenStep(direction) {
+        let from = 0;
+        screens.forEach((screen, index) => {
+          if (Math.abs(screen.offsetTop - window.scrollY) <
+              Math.abs(screens[from].offsetTop - window.scrollY)) from = index;
+        });
+        const next = Math.max(0, Math.min(screens.length - 1, from + direction));
+        if (next === from) return false;
+        window.scrollTo({ top: screens[next].offsetTop, behavior: "smooth" });
+        return true;
+      }
+
+      window.addEventListener("wheel", (event) => {
+        if (body.hasAttribute("data-locked")) return;
+        if (cardOverlay.dataset.open === "true") return;
+        const direction = Math.sign(event.deltaY);
+        if (!direction) return;
+        if (ownScroller(event.target, direction)) return;
+
+        event.preventDefault();
+        const now = performance.now();
+        const sameGesture = now - screenLastWheel < SCREEN_GESTURE_GAP &&
+          Math.abs(event.deltaY) <= Math.abs(screenLastDelta) * 1.3;
+        const held = now < screenHeldUntil;
+        screenLastWheel = now;
+        screenLastDelta = sameGesture
+          ? Math.max(Math.abs(event.deltaY), Math.abs(screenLastDelta) * 0.92)
+          : Math.abs(event.deltaY);
+        if (held || sameGesture) return;
+        if (screenStep(direction)) screenHeldUntil = now + SCREEN_STEP_HOLD;
+      }, { passive: false });
 
       document.querySelector("#scrollHint").addEventListener("click", () => {
         document.querySelector("#about").scrollIntoView({ behavior: "smooth", block: "start" });
