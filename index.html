@@ -1,0 +1,3306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ededed">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="favicon-180.png">
+  <meta
+    name="description"
+    content="Portfolio of Daniyar Kalikulov — three web development projects: a full-stack trip planner, a gamified language-learning app, and a UX research case study."
+  >
+  <title>Daniyar Kalikulov — Projects</title>
+  <style>
+    @font-face {
+      font-family: "42dot Sans";
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+      src: url("fonts/42dot/42dot-sans.woff2") format("woff2");
+    }
+
+    :root {
+      --frame-top: 25px;
+
+      --zone-left: var(--contact-inset, 141px);
+      --zone-width: calc(50vw - 94px - var(--contact-inset, 141px));
+      --zone-top: var(--frame-top);
+      --zone-height: calc(100% - 95px - var(--frame-top));
+      --zone-pad: 20px;
+
+      --clay: #9c1d2e;
+      --paper: #eef0ea;
+      --mint: #90fbd9;
+      --paper-bg: #ededed;
+      --ink-on-paper: #101010;
+      --font-office: "42dot Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+      --ease: cubic-bezier(.2, .78, .2, 1);
+      --mx: 0px;
+      --my: 0px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-snap-type: y mandatory;
+      overscroll-behavior: none;
+      background: #171009;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100dvh;
+      background: var(--paper-bg);
+      overscroll-behavior: none;
+      color: var(--ink-on-paper);
+      font-family: var(--font-office);
+      font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+      cursor: default;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    [data-mode="detail"] {
+      --band-top: 12%;
+      --band-height: calc(88% - 95px);
+      --band-center-x: calc((var(--contact-inset, 141px) + 50vw - 74px) / 2);
+    }
+
+    html {
+      scrollbar-color: var(--ink-on-paper) var(--paper-bg);
+    }
+
+    html::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    html::-webkit-scrollbar-track {
+      background: var(--paper-bg);
+    }
+
+    html::-webkit-scrollbar-thumb {
+      background: var(--ink-on-paper);
+    }
+
+    .stage {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: var(--paper-bg);
+      scroll-snap-align: start;
+    }
+
+    .contact-trigger {
+      position: fixed;
+      z-index: 90;
+      top: var(--frame-top);
+      left: calc(20px + (100vw - 40px) * 5 / 6 + 5px);
+      padding: 10px 22px;
+      border: 1.5px solid #0a0a0a;
+      outline: 0;
+      background: var(--mint);
+      -webkit-tap-highlight-color: transparent;
+      font-family: var(--font-office);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      transform-origin: center;
+      transition: transform 320ms cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .contact-trigger:hover {
+      transform: scale(1.3);
+    }
+
+    .contact-trigger:focus-visible {
+      outline: 2px solid #0a0a0a;
+      outline-offset: 3px;
+    }
+
+    .contact-label {
+      color: #0a0a0a;
+    }
+
+    .close-button,
+    .pill,
+    .book-card {
+      border: 0;
+      outline: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .close-button:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 4px;
+    }
+
+    .pill:focus-visible {
+      outline: 2px solid #0a0a0a;
+      outline-offset: 3px;
+    }
+
+    .hero-word {
+      position: absolute;
+      z-index: 1;
+      top: 13vh;
+      left: 50%;
+      margin: 0;
+      color: var(--ink-on-paper);
+      font-family: var(--font-office);
+      font-size: clamp(60px, 10.88vw, 200px);
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      line-height: .9;
+      white-space: nowrap;
+      transform: translate3d(calc(-50% + var(--mx) * -.12), calc(var(--my) * -.12), 0);
+      transition: opacity 700ms ease, filter 700ms ease, transform 900ms var(--ease);
+      user-select: none;
+    }
+
+    .stage-grid {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      padding: 20px;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      transition: filter 520ms ease, opacity 520ms ease;
+    }
+
+    [data-mode="detail"] .stage-grid {
+      filter: blur(7px);
+      opacity: 0;
+    }
+
+    .stage-grid-inner {
+      flex: 1;
+      width: 100%;
+      max-width: 1960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+    }
+
+    .stage-col-line {
+      grid-row: 1 / -1;
+      margin-top: -20px;
+      margin-bottom: -20px;
+      border-left: 1px dotted rgba(0, 0, 0, .35);
+      border-right: 1px dotted rgba(0, 0, 0, .35);
+    }
+
+    .stage-col-line:nth-child(1) { grid-column: 1; }
+    .stage-col-line:nth-child(2) { grid-column: 2; }
+    .stage-col-line:nth-child(3) { grid-column: 3; }
+    .stage-col-line:nth-child(4) { grid-column: 4; }
+    .stage-col-line:nth-child(5) { grid-column: 5; }
+    .stage-col-line:nth-child(6) { grid-column: 6; }
+
+    .stage-row-line {
+      grid-column: 1 / -1;
+      position: relative;
+      left: 50%;
+      width: 100vw;
+      margin-left: -50vw;
+      border-top: 1px dotted rgba(0, 0, 0, .35);
+      border-bottom: 1px dotted rgba(0, 0, 0, .35);
+    }
+
+    .stage-row-line:nth-child(7) { grid-row: 1; }
+    .stage-row-line:nth-child(8) { grid-row: 2; }
+    .stage-row-line:nth-child(9) { grid-row: 3; }
+
+    .shelf-nav,
+    .media-nav,
+    .detail-kicker,
+    .scroll-hint {
+      display: none;
+    }
+
+    .stage-flow {
+      display: contents;
+    }
+
+    .stage-frame-line {
+      position: absolute;
+    }
+
+    .stage-frame-line-left,
+    .stage-frame-line-right {
+      top: 0;
+      bottom: 0;
+      width: 0;
+      border-left: 1px dotted rgba(0, 0, 0, .35);
+    }
+
+    .stage-frame-line-left { left: 20px; }
+    .stage-frame-line-right { right: 20px; }
+
+    .stage-frame-line-top,
+    .stage-frame-line-bottom {
+      display: none;
+      left: 0;
+      right: 0;
+      height: 0;
+      border-top: 1px dotted rgba(0, 0, 0, .35);
+    }
+
+    .stage-frame-line-top { top: 20px; }
+    .stage-frame-line-bottom { bottom: 20px; }
+
+    @media (max-width: 900px) {
+      .stage-grid-inner {
+        display: none;
+      }
+
+      .stage-frame-line-top,
+      .stage-frame-line-bottom {
+        display: block;
+      }
+
+      [data-mode="detail"] .stage-grid {
+        filter: none;
+        opacity: 1;
+      }
+    }
+
+    .shelf {
+      position: absolute;
+      z-index: 5;
+      inset: 0;
+      perspective: 1400px;
+      transform-style: flat;
+    }
+
+    .book-card {
+      --hover-y: 0px;
+      --local-x: 0px;
+      --local-y: 0px;
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--w);
+      aspect-ratio: .672 / 1;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      transform:
+        translate3d(
+          calc(-50% + var(--local-x)),
+          calc(var(--hover-y) + var(--local-y)),
+          0
+        )
+        rotate(var(--r))
+        rotateY(var(--yaw));
+      transform-style: preserve-3d;
+      transition:
+        left 1100ms var(--ease),
+        top 1100ms var(--ease),
+        width 1100ms var(--ease),
+        opacity 500ms ease,
+        filter 500ms ease,
+        transform 520ms var(--ease);
+      will-change: transform, left, top, width;
+    }
+
+    .book-card[data-book="mittweida"] {
+      --x: 23.2%;
+      --y: 36%;
+      --w: min(39vw, 560px, 35vw - 72px);
+      --r: -8deg;
+      --yaw: -7deg;
+      z-index: 1;
+    }
+
+    .book-card[data-book="detris"] {
+      --x: 50%;
+      --y: 27.7%;
+      --w: min(42vw, 605px, 37.8vw - 78px);
+      --r: .8deg;
+      --yaw: -3deg;
+      z-index: 3;
+    }
+
+    .book-card[data-book="atmosfair"] {
+      --x: 77%;
+      --y: 37.5%;
+      --w: min(39vw, 560px, 35vw - 72px);
+      --r: 8deg;
+      --yaw: -7deg;
+      z-index: 2;
+    }
+
+    .book-card:hover,
+    .book-card[data-hovered="true"] {
+      --hover-y: -28px;
+      z-index: 8;
+    }
+
+    .book {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 800ms var(--ease);
+    }
+
+    .book-card:hover .book {
+      transform: scale(1.035) rotateX(-1.5deg);
+    }
+
+    .book-back,
+    .page-block,
+    .page-fan,
+    .front-cover,
+    .book-shadow {
+      position: absolute;
+      inset: 0;
+      border-radius: 3px 7px 7px 3px;
+    }
+
+    .book-shadow {
+      z-index: -2;
+      inset: 5% -4% -2% 4%;
+      border-radius: 12px;
+      background: rgba(5, 8, 14, .7);
+      filter: blur(22px);
+      opacity: .72;
+      transform: translate3d(18px, 28px, -60px);
+    }
+
+    .book-back {
+      z-index: 0;
+      background: var(--cover-color);
+      box-shadow: 0 18px 30px rgba(5, 8, 14, .4);
+      transform: translate3d(7px, 1px, -26px);
+    }
+
+    .page-block {
+      z-index: 1;
+      inset: 1.4% 0% 1.4% 3.8%;
+      overflow: visible;
+      border: 1px solid rgba(84, 68, 45, .3);
+      border-radius: 2px 6px 6px 2px;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(96, 78, 52, .22) 0,
+          rgba(96, 78, 52, .22) 1px,
+          rgba(255, 252, 244, .5) 1px,
+          rgba(255, 252, 244, .5) 2.4px
+        ),
+        linear-gradient(
+          90deg,
+          #bfae8c 0%,
+          #efe4cc 10%,
+          #f6efdd 34%,
+          #e9dcc0 72%,
+          #d3c19c 92%,
+          #b8a67f 100%
+        );
+      box-shadow:
+        10px 6px 20px rgba(5, 8, 14, .32),
+        inset -2px 0 6px rgba(120, 98, 64, .3);
+      transform: translate3d(var(--page-out, 3px), 1px, -12px);
+      transition: transform 1100ms var(--ease), inset 1100ms var(--ease);
+    }
+
+    .page-block::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      right: 1px;
+      left: 1px;
+      height: 8px;
+      border-radius: 2px 4px 0 0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #d9cbae 0,
+          #d9cbae 2px,
+          #f2e7cf 2px,
+          #f2e7cf 5px
+        );
+      transform: skewX(-8deg);
+      transform-origin: bottom left;
+    }
+
+    .page-block::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -7px;
+      width: 8px;
+      height: 100%;
+      border-radius: 0 4px 4px 0;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          #cbb995 0,
+          #cbb995 1px,
+          #eee3cd 1px,
+          #eee3cd 3px
+        );
+      box-shadow: 3px 2px 7px rgba(5, 8, 14, .18);
+      transform: skewY(-2deg);
+      transform-origin: left center;
+    }
+
+    .book-card[data-book="detris"] .page-block { --page-out: 10px; }
+    .book-card[data-book="atmosfair"] .page-block { --page-out: 17px; }
+
+    .page-fan {
+      z-index: 2;
+      inset: 2.4% 0.6% 2.4% 4.3%;
+      pointer-events: none;
+      transform-style: preserve-3d;
+    }
+
+    .page-fan i {
+      position: absolute;
+      inset: 0;
+      display: block;
+      border: 1px solid rgba(102, 83, 55, .22);
+      border-radius: 2px 5px 5px 2px;
+      background:
+        linear-gradient(90deg, rgba(116, 91, 56, .22), transparent 9%),
+        repeating-linear-gradient(
+          0deg,
+          #f0e6d0 0,
+          #f0e6d0 2px,
+          #e6d8ba 2px,
+          #e6d8ba 3px
+        );
+      box-shadow: 3px 5px 10px rgba(5, 8, 14, .08);
+      opacity: 0;
+      transform: translate3d(0, 0, 0) rotateY(0);
+      transform-origin: 1.5% center;
+      transition: opacity 500ms ease, transform 1100ms var(--ease);
+    }
+
+    .front-cover {
+      z-index: 3;
+      overflow: hidden;
+      border: 1px solid rgba(201, 169, 110, .25);
+      background-color: var(--cover-color);
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"),
+        radial-gradient(120% 90% at 22% 0%, rgba(255, 255, 255, .1), transparent 60%),
+        linear-gradient(155deg, rgba(255, 255, 255, .05), transparent 40%);
+      background-blend-mode: soft-light, normal, normal;
+      background-position: center;
+      background-size: 140px, cover, cover;
+      box-shadow:
+        0 25px 38px rgba(5, 8, 14, .4),
+        inset -12px 0 18px rgba(0, 0, 0, .16),
+        inset 4px 0 9px rgba(255, 255, 255, .12);
+      transform: translate3d(0, 0, 12px);
+      transform-origin: 1.5% center;
+      transform-style: preserve-3d;
+      transition: transform 1100ms var(--ease), box-shadow 600ms ease;
+    }
+
+    .front-cover::before {
+      content: "";
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 5.5%;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(0, 0, 0, .35),
+          rgba(255, 255, 255, .08) 35%,
+          rgba(0, 0, 0, .12) 75%,
+          transparent
+        );
+      mix-blend-mode: multiply;
+      opacity: .8;
+    }
+
+    .front-cover::after {
+      content: "";
+      position: absolute;
+      z-index: 4;
+      inset: 0;
+      border: 1px solid rgba(255, 255, 255, .05);
+      border-radius: inherit;
+      box-shadow:
+        inset 0 0 0 10px rgba(0, 0, 0, .12),
+        inset 0 0 0 11px rgba(201, 169, 110, .28);
+      pointer-events: none;
+    }
+
+    .cover-motion {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 420ms ease;
+      pointer-events: none;
+    }
+
+    .cover-motion[data-ready="true"] {
+      opacity: 1;
+    }
+
+    .cover-copy {
+      --cover-gap: 3.4%;
+      position: absolute;
+      z-index: 2;
+      inset: 5.8% 7.5% 5.5%;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      align-content: start;
+      color: var(--cover-ink);
+      font-family: var(--font-office);
+      text-align: center;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+    }
+
+    .cover-kicker {
+      font-size: clamp(10px, .97vw, 14px);
+      font-style: normal;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .cover-kicker::before {
+      content: "";
+      display: block;
+      width: 30px;
+      height: 1px;
+      margin: 0 auto var(--cover-gap);
+      background: currentColor;
+      opacity: .55;
+    }
+
+    .cover-title {
+      margin-top: var(--cover-gap);
+      font-size: clamp(26px, 2.45vw, 36px);
+      font-weight: 400;
+      letter-spacing: .015em;
+      line-height: 1;
+    }
+
+    .cover-subtitle {
+      margin-top: var(--cover-gap);
+      font-size: clamp(12px, 1.25vw, 18px);
+      font-style: normal;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: .06em;
+    }
+
+    .cover-emblem {
+      position: relative;
+      align-self: center;
+      justify-self: center;
+      display: grid;
+      place-items: center;
+      width: 15%;
+      min-width: 32px;
+      max-width: 54px;
+      aspect-ratio: 1;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-size: clamp(13px, 1.5vw, 19px);
+      font-weight: 400;
+      letter-spacing: 0;
+      opacity: .85;
+    }
+
+    .cover-emblem::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      opacity: .55;
+    }
+
+    .cover-footer {
+      align-self: end;
+      padding-top: 3%;
+      border-top: 1px solid currentColor;
+      font-size: clamp(7px, .62vw, 9px);
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .book-card[data-book="mittweida"] .cover-copy {
+      --cover-ink: #c9ad74;
+    }
+
+    .book-card[data-book="detris"] .cover-copy {
+      --cover-ink: #d9bd85;
+    }
+
+    .book-card[data-book="atmosfair"] .cover-copy {
+      --cover-ink: #c2b48e;
+    }
+
+    .open-badge {
+      position: absolute;
+      z-index: 6;
+      top: 47%;
+      left: 50%;
+      display: grid;
+      width: 94px;
+      height: 66px;
+      place-items: center;
+      color: #f5e9e2;
+      background: var(--clay);
+      clip-path: polygon(
+        3% 22%, 10% 8%, 25% 7%, 38% 1%, 51% 6%, 66% 2%,
+        77% 10%, 92% 11%, 96% 26%, 100% 39%, 95% 52%, 99% 67%,
+        88% 79%, 83% 93%, 68% 94%, 55% 100%, 42% 94%, 27% 98%,
+        17% 88%, 4% 84%, 5% 69%, 0 57%, 5% 43%, 1% 34%
+      );
+      font-family: var(--font-office);
+      font-size: 11px;
+      font-style: normal;
+      font-weight: 700;
+      letter-spacing: .12em;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(.76) rotate(-3deg);
+      transition: opacity 260ms ease, transform 420ms var(--ease), filter 260ms ease;
+      pointer-events: none;
+    }
+
+    .book-card:hover .open-badge,
+    .book-card[data-hovered="true"] .open-badge,
+    .book-card:focus-visible .open-badge {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1) rotate(-3deg);
+    }
+
+    .book-card:focus-visible {
+      outline: 0;
+    }
+
+    .book-card:focus-visible .open-badge {
+      filter:
+        drop-shadow(0 7px 12px rgba(5, 8, 14, .34))
+        drop-shadow(0 0 8px rgba(224, 190, 137, .28));
+    }
+
+    .detail-panel {
+      position: absolute;
+      z-index: 12;
+      top: 12%;
+      left: 50vw;
+      right: var(--contact-inset, 20px);
+      bottom: calc(28px + var(--dock-height, 96px) + 22px);
+      display: flex;
+      flex-direction: column;
+      width: auto;
+      opacity: 0;
+      transition: opacity 520ms ease 280ms;
+      pointer-events: none;
+    }
+
+    .detail-title {
+      margin: 0 0 22px;
+      color: var(--ink-on-paper);
+      font-family: var(--font-office);
+      font-size: clamp(26px, 3.13vw, 48px);
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: .01em;
+      line-height: 1.1;
+    }
+
+    .detail-description {
+      margin: 0;
+      color: var(--ink-on-paper);
+      font-size: 18px;
+      line-height: 1.55;
+      letter-spacing: -0.02em;
+    }
+
+    .detail-description a {
+      padding: 1px 5px;
+      background: var(--mint);
+      color: var(--ink-on-paper);
+      text-decoration: none;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      transition: background 200ms ease, color 200ms ease;
+    }
+
+    .detail-description a:hover {
+      background: var(--ink-on-paper);
+      color: var(--mint);
+    }
+
+    .detail-description a:focus-visible {
+      outline: 2px solid var(--ink-on-paper);
+      outline-offset: 3px;
+    }
+
+    .detail-points {
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-points li {
+      position: relative;
+      padding-left: 20px;
+      color: var(--ink-on-paper);
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.02em;
+    }
+
+    .detail-points li::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: .62em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .55;
+    }
+
+    .detail-tech {
+      margin: 0 0 6px;
+      color: var(--ink-on-paper);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      letter-spacing: .02em;
+    }
+
+    .detail-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+    }
+
+    .detail-scroll.is-clipped {
+      padding-bottom: 76px;
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        #000 0,
+        #000 calc(100% - 76px),
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        #000 0,
+        #000 calc(100% - 76px),
+        transparent 100%
+      );
+    }
+
+    .detail-scroll:focus-visible {
+      border-radius: 8px;
+      outline: 1px solid rgba(231, 184, 185, .7);
+      outline-offset: 8px;
+    }
+
+    .detail-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .detail-rule {
+      height: 1px;
+      margin: 10px 0 22px;
+      border: 0;
+      background: var(--ink-on-paper);
+    }
+
+    .bottom-dock {
+      position: fixed;
+      z-index: 24;
+      left: 50vw;
+      right: var(--contact-inset, 20px);
+      bottom: 28px;
+      width: auto;
+    }
+
+    .bottom-dock.is-linkless {
+      padding-bottom: 52px;
+    }
+
+    .bottom-dock .detail-rule {
+      margin: 10px 0 14px;
+    }
+
+    .action-rail {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .pill {
+      display: inline-flex;
+      flex: 1 1 0;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 52px;
+      padding: 0 22px;
+      border: 1.5px solid #0a0a0a;
+      background: var(--mint);
+      color: #0a0a0a;
+      cursor: pointer;
+      font-family: var(--font-office);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      white-space: nowrap;
+      text-decoration: none;
+      transition: background 220ms ease, color 220ms ease;
+    }
+
+    .pill[hidden] {
+      display: none;
+    }
+
+    .pill:hover {
+      background: #0a0a0a;
+      color: var(--mint);
+    }
+
+    .project-media {
+      position: absolute;
+      z-index: 20;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 50vw;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 420ms ease;
+    }
+
+    .project-media::-webkit-scrollbar {
+      display: none;
+    }
+
+    [data-mode="detail"] .project-media {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .project-media-shots {
+      display: contents;
+    }
+
+    .project-media-gap {
+      height: 100%;
+      scroll-snap-align: start;
+    }
+
+    .project-slide {
+      position: relative;
+      height: 100%;
+      scroll-snap-align: start;
+    }
+
+    .project-slide img,
+    .project-slide video {
+      position: absolute;
+      top: calc(var(--zone-top) + var(--zone-pad));
+      left: var(--zone-left);
+      width: var(--zone-width);
+      height: calc(var(--zone-height) - var(--zone-pad) * 2);
+      object-fit: contain;
+    }
+
+    .scroll-nav {
+      --nav-gap: 18px;
+      position: fixed;
+      z-index: 24;
+      left: calc(var(--zone-left) + var(--zone-width) / 2);
+      bottom: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--nav-gap) - 1px);
+      min-height: 52px;
+      padding: 0 calc(var(--nav-gap) - 1.5px);
+      border: 1.5px solid #0a0a0a;
+      background: var(--mint);
+      color: #0a0a0a;
+      cursor: pointer;
+      outline: 0;
+      font-family: var(--font-office);
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%);
+      transition:
+        opacity 520ms ease 280ms,
+        background 220ms ease,
+        color 220ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    [data-mode="detail"] .scroll-nav {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    [data-mode="shelf"] .scroll-nav {
+      transition-duration: 160ms;
+      transition-delay: 0ms;
+    }
+
+    .scroll-nav.is-spent {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .scroll-nav:hover {
+      background: #0a0a0a;
+      color: var(--mint);
+    }
+
+    .scroll-nav:focus-visible {
+      outline: 2px solid #0a0a0a;
+      outline-offset: 3px;
+    }
+
+    .scroll-nav svg {
+      width: 10.5px;
+      height: 12px;
+      transition: transform 320ms var(--ease);
+    }
+
+    .scroll-nav.is-end svg {
+      transform: rotate(180deg);
+    }
+
+    .close-button {
+      position: absolute;
+      z-index: 52;
+      top: var(--frame-top);
+      left: calc(50% - 40px);
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, .26);
+      border-radius: 50%;
+      background: rgba(8, 12, 19, .35);
+      color: var(--paper);
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: 200;
+      opacity: 0;
+      transform: translate3d(-50%, -18px, 0) rotate(-45deg);
+      transition: opacity 400ms ease, transform 620ms var(--ease),
+        background 220ms ease, border-color 220ms ease, color 220ms ease;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+    }
+
+    .close-button:hover {
+      border-color: var(--mint);
+      background: var(--mint);
+      color: #0a0a0a;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 80;
+      bottom: 22px;
+      left: 50%;
+      max-width: calc(100vw - 32px);
+      padding: 12px 18px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 999px;
+      background: rgba(9, 13, 21, .92);
+      color: var(--paper);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, .22);
+      font-size: 13px;
+      font-weight: 650;
+      opacity: 0;
+      transform: translate(-50%, 20px);
+      transition: opacity 250ms ease, transform 350ms var(--ease);
+      pointer-events: none;
+      backdrop-filter: blur(12px);
+    }
+
+    .toast[data-show="true"] {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    [data-mode="detail"] .hero-word {
+      opacity: 0;
+      filter: blur(16px);
+      transform: translate3d(-50%, -34px, 0) scale(.9);
+    }
+
+    [data-mode="detail"] .book-card:not(.selected) {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translate3d(-50%, 60vh, -200px) rotate(var(--r)) scale(.8);
+      pointer-events: none;
+    }
+
+    [data-mode="detail"] .book-card.selected {
+      --hover-y: 0px;
+      --local-x: 0px;
+      --local-y: 0px;
+      --detail-yaw: -5deg;
+      --detail-pitch: 0deg;
+      left: var(--band-center-x);
+      top: calc(var(--band-top) + var(--band-height) / 2);
+      width: min(36vw, 520px);
+      z-index: 14;
+      cursor: default;
+      transition:
+        left 1100ms var(--ease),
+        top 1100ms var(--ease),
+        width 1100ms var(--ease),
+        transform 1100ms var(--ease),
+        opacity 500ms ease,
+        filter 500ms ease;
+      --book-scale: .8833;
+      --book-nudge-x: 0px;
+      --book-nudge-y: 0px;
+      transform:
+        translate3d(
+          calc(-50% + var(--book-nudge-x)),
+          calc(-50% - var(--media-shift, 0px) + var(--book-nudge-y)),
+          0
+        )
+        rotate(-3deg)
+        scale(var(--book-scale));
+      pointer-events: none;
+    }
+
+    .book-card.is-fitting,
+    .book-card.is-fitting * {
+      transition: none !important;
+    }
+
+    [data-mode="detail"] .book-card.selected.is-tracking {
+      transition:
+        left 1100ms var(--ease),
+        top 1100ms var(--ease),
+        width 1100ms var(--ease),
+        opacity 500ms ease,
+        filter 500ms ease;
+    }
+
+    [data-mode="detail"] .book-card.selected .book {
+      transform: scale(1.02) rotateX(var(--detail-pitch)) rotateY(var(--detail-yaw));
+      transition-duration: 170ms;
+      transition-timing-function: cubic-bezier(.2, .78, .2, 1);
+    }
+
+    [data-mode="detail"] .book-card.selected.is-opening .book {
+      transition: transform 1100ms var(--ease);
+    }
+
+    [data-mode="detail"] .book-card.selected .front-cover {
+      box-shadow:
+        25px 26px 44px rgba(5, 8, 14, .34),
+        inset -12px 0 18px rgba(0, 0, 0, .13),
+        inset 4px 0 9px rgba(255, 255, 255, .1);
+      transform: translate3d(0, 0, 18px) rotateY(-29deg);
+    }
+
+    [data-mode="detail"] .book-card.selected .page-block {
+      inset: 1.9% 1.5% 1.9% 4.4%;
+      transform: translate3d(6px, 1px, -11px);
+    }
+
+    [data-mode="detail"] .book-card.selected .page-fan i {
+      opacity: 1;
+    }
+
+    [data-mode="detail"] .book-card.selected .page-fan i:nth-child(1) {
+      transform: translate3d(0, 0, 10px) rotateY(-4deg);
+    }
+
+    [data-mode="detail"] .book-card.selected .page-fan i:nth-child(2) {
+      transform: translate3d(0, 0, 11px) rotateY(-8deg);
+    }
+
+    [data-mode="detail"] .book-card.selected .page-fan i:nth-child(3) {
+      transform: translate3d(0, 0, 12px) rotateY(-12deg);
+    }
+
+    [data-mode="detail"] .book-card.selected .page-fan i:nth-child(4) {
+      transform: translate3d(0, 0, 13px) rotateY(-16deg);
+    }
+
+    [data-mode="detail"] .book-card.selected .open-badge {
+      opacity: 0;
+    }
+
+    [data-mode="detail"] .detail-panel {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    [data-mode="shelf"] .detail-panel {
+      transition-duration: 160ms;
+      transition-delay: 0ms;
+    }
+
+    [data-mode="detail"] .close-button {
+      opacity: 1;
+      transform: translate3d(-50%, 0, 0) rotate(0);
+      pointer-events: auto;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        overflow: auto;
+      }
+
+      html:has(body[data-mode="detail"]) {
+        scroll-snap-type: none;
+      }
+
+      .stage {
+        min-height: 100dvh;
+        overflow: hidden;
+      }
+
+      .hero-word {
+        top: calc(var(--frame-top) + var(--contact-height) + 22px);
+        font-size: clamp(72px, 24vw, 220px);
+      }
+
+      .shelf {
+        --shelf-top: calc(var(--frame-top) + var(--contact-height) + 22px + 21.6vw);
+        --shelf-bottom: calc(100dvh - 25px - var(--contact-height));
+        --book-w: min(
+          100vw - 90px,
+          360px,
+          (var(--shelf-bottom) - var(--shelf-top) - 44px) / 1.537
+        );
+        --book-paint: calc(var(--book-w) * 1.537);
+        --step: calc(50vw + var(--book-w) * .539 - 20px);
+        touch-action: pan-y;
+      }
+
+      .book-card[data-book] {
+        --x: calc(50% + (var(--i) - var(--shelf-index, 1)) * var(--step));
+        --y: calc((var(--shelf-top) + var(--shelf-bottom) - var(--book-paint)) / 2 + var(--book-w) * .03);
+        --w: var(--book-w);
+        --r: -3deg;
+      }
+
+      .book-card[data-book="mittweida"] { --i: 0; }
+      .book-card[data-book="detris"] { --i: 1; }
+      .book-card[data-book="atmosfair"] { --i: 2; }
+
+      [data-mode="shelf"] .book-card {
+        transition-duration: 520ms;
+      }
+
+      .shelf-nav {
+        position: absolute;
+        z-index: 6;
+        left: 50%;
+        bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        transform: translateX(-50%);
+        transition: opacity 160ms ease;
+      }
+
+      [data-mode="detail"] .shelf-nav {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .nav-chip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--contact-height);
+        height: var(--contact-height);
+        padding: 0;
+        border: 1.5px solid #0a0a0a;
+        background: var(--mint);
+        color: #0a0a0a;
+        cursor: pointer;
+        outline: 0;
+        -webkit-tap-highlight-color: transparent;
+        transition: background 220ms ease, color 220ms ease, border-color 220ms ease;
+      }
+
+      .nav-chip svg {
+        width: 12px;
+        height: 14px;
+      }
+
+      .scroll-hint {
+        position: absolute;
+        z-index: 3;
+        bottom: 25px;
+        left: 25px;
+      }
+
+      .nav-chip[data-step="-1"] svg {
+        transform: rotate(90deg);
+      }
+
+      .nav-chip[data-step="1"] svg {
+        transform: rotate(-90deg);
+      }
+
+      .nav-chip:disabled {
+        border-color: rgba(10, 10, 10, .3);
+        background: transparent;
+        color: rgba(10, 10, 10, .3);
+        cursor: default;
+      }
+
+      .nav-chip:focus-visible {
+        outline: 2px solid #0a0a0a;
+        outline-offset: 2px;
+      }
+
+      .nav-dots {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-dots i {
+        width: 6px;
+        height: 6px;
+        border: 1px solid #0a0a0a;
+        border-radius: 50%;
+        transition: background 220ms ease;
+      }
+
+      .nav-dots i[data-on="true"] {
+        background: #0a0a0a;
+      }
+
+      body[data-locked] {
+        position: fixed;
+        left: 0;
+        right: 0;
+        width: 100%;
+      }
+
+      [data-mode="detail"] .stage {
+        height: 100dvh;
+        overflow: hidden;
+      }
+
+      .stage-flow {
+        position: fixed;
+        z-index: 8;
+        inset: calc(var(--frame-top) + var(--contact-height) + 22px) 25px 20px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-bottom: 5px;
+        scrollbar-width: none;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease;
+        -webkit-mask-image: linear-gradient(to bottom,
+          transparent 0, #000 var(--fade-top, 0px),
+          #000 calc(100% - var(--fade-bottom, 0px)), transparent 100%);
+        mask-image: linear-gradient(to bottom,
+          transparent 0, #000 var(--fade-top, 0px),
+          #000 calc(100% - var(--fade-bottom, 0px)), transparent 100%);
+      }
+
+      [data-mode="detail"] .stage-flow {
+        opacity: 1;
+        pointer-events: auto;
+        transition: opacity 420ms ease 160ms;
+      }
+
+      .stage-flow::-webkit-scrollbar {
+        display: none;
+      }
+
+      .detail-panel { order: 1; flex: none; }
+      .project-media { order: 2; flex: none; }
+      .media-nav { order: 3; flex: none; }
+
+      [data-mode="detail"] .shelf {
+        visibility: hidden;
+        transition: visibility 0s linear 480ms;
+      }
+
+      [data-mode="shelf"] .shelf {
+        visibility: visible;
+        transition: visibility 0s;
+      }
+
+      [data-mode="detail"] .book-card.selected {
+        left: var(--x);
+        top: var(--y);
+        width: var(--w);
+        opacity: 0;
+        transform: translate3d(-50%, -4%, 0) rotate(-3deg) scale(1.28);
+        transition:
+          opacity 380ms ease 90ms,
+          transform 640ms var(--ease);
+      }
+
+      .project-media {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: calc(
+          100dvh - var(--frame-top) - var(--contact-height) - 22px
+          - 22px - var(--contact-height) - 25px
+          - 44px
+        );
+        touch-action: pan-x pan-y;
+        margin-top: 22px;
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        padding: 0;
+        gap: 22px;
+      }
+
+      .project-media::-webkit-scrollbar {
+        display: none;
+      }
+
+      .project-media[hidden] {
+        display: none;
+      }
+
+      .project-media-gap {
+        display: none;
+      }
+
+      .project-media-shots {
+        display: contents;
+      }
+
+      .project-slide {
+        flex: 0 0 100%;
+        height: 100%;
+        aspect-ratio: auto;
+        scroll-snap-align: center;
+      }
+
+      .project-slide img,
+      .project-slide video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .media-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 22px;
+      }
+
+      .media-nav[hidden] {
+        display: none;
+      }
+
+      .scroll-nav {
+        display: none;
+      }
+
+      .detail-panel {
+        position: relative;
+        top: auto;
+        right: auto;
+        left: auto;
+        bottom: auto;
+        display: block;
+        width: auto;
+        padding: 0;
+        opacity: 1;
+        transition: none;
+      }
+
+      .detail-scroll {
+        flex: none;
+        max-height: none;
+        overflow: visible;
+      }
+
+      .detail-scroll.is-clipped {
+        padding-bottom: 0;
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+
+      .bottom-dock {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        width: auto;
+        margin-top: 22px;
+        padding-bottom: 0;
+      }
+
+      .bottom-dock.is-linkless {
+        padding-bottom: 0;
+      }
+
+      .close-button {
+        position: fixed;
+        left: 50%;
+        right: auto;
+        width: var(--contact-height);
+        height: var(--contact-height);
+        font-size: 20px;
+      }
+
+      .detail-kicker {
+        position: fixed;
+        z-index: 52;
+        top: var(--frame-top);
+        left: 25px;
+        display: flex;
+        align-items: center;
+        height: var(--contact-height);
+        margin: 0;
+        color: var(--ink-on-paper);
+        font-family: var(--font-office);
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: .08em;
+        line-height: 1;
+        text-transform: uppercase;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease;
+      }
+
+      [data-mode="detail"] .detail-kicker {
+        opacity: 1;
+      }
+
+      .detail-title {
+        font-size: clamp(36px, 8vw, 56px);
+      }
+
+      .action-rail {
+        flex-direction: column;
+        align-items: stretch;
+        overflow: visible;
+      }
+
+      .pill {
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero-word {
+        font-size: 24vw;
+      }
+
+      .detail-scroll {
+        padding-right: 0;
+      }
+
+      .pill {
+        min-width: 0;
+        min-height: 48px;
+        padding: 0 12px;
+        font-size: 15px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cover-motion {
+        display: none !important;
+      }
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        transition-delay: 0ms !important;
+      }
+    }
+
+    /* ---- Office screen ---- */
+    .office-screen {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: #454545;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    .office-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .4;
+    }
+
+    .office-models {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .office-models-back {
+      z-index: 0;
+    }
+
+    .office-models-front {
+      z-index: 2;
+    }
+
+    .office-title {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      padding: 0 4vw;
+      text-align: center;
+      color: var(--mint);
+      font-family: var(--font-office);
+      font-weight: 600;
+      font-size: clamp(30px, 6.4vw, 112px);
+      line-height: 1.04;
+      letter-spacing: -.01em;
+      white-space: nowrap;
+    }
+
+    /* ---- About screen ---- */
+    .about-screen {
+      position: relative;
+      width: 100%;
+      height: 100dvh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: var(--paper-bg);
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    .about-inner {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .about-content {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      max-width: 1960px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .about-grid {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    @media (min-width: 2000px) {
+      .about-grid {
+        grid-template-columns: repeat(6, 320px);
+      }
+
+      .contact-trigger {
+        left: calc(50vw + 625px);
+      }
+    }
+
+    .about-col {
+      grid-row: 1 / -1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-col-text:nth-of-type(1) { grid-column: 1; }
+    .about-col-text:nth-of-type(2) { grid-column: 2; }
+    .about-col-text:nth-of-type(3) { grid-column: 3; }
+
+    .about-frame-line {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .about-frame-line-left,
+    .about-frame-line-right {
+      top: 0;
+      bottom: 0;
+      width: 0;
+      border-left: 1px dotted rgba(0, 0, 0, .35);
+    }
+
+    .about-frame-line-left { left: 20px; }
+    .about-frame-line-right { right: 20px; }
+
+    .about-frame-line-top,
+    .about-frame-line-bottom {
+      display: none;
+      left: 0;
+      right: 0;
+      height: 0;
+      border-top: 1px dotted rgba(0, 0, 0, .35);
+    }
+
+    .about-frame-line-top { top: 20px; }
+    .about-frame-line-bottom { bottom: 20px; }
+
+    .about-col-line {
+      grid-row: 1 / -1;
+      margin-top: -20px;
+      margin-bottom: -20px;
+      border-left: 1px dotted rgba(0, 0, 0, .35);
+      border-right: 1px dotted rgba(0, 0, 0, .35);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .about-col-line:nth-child(1) { grid-column: 1; }
+    .about-col-line:nth-child(2) { grid-column: 2; }
+    .about-col-line:nth-child(3) { grid-column: 3; }
+    .about-col-line:nth-child(4) { grid-column: 4; }
+    .about-col-line:nth-child(5) { grid-column: 5; }
+    .about-col-line:nth-child(6) { grid-column: 6; }
+
+    .about-row-line {
+      grid-column: 1 / -1;
+      position: relative;
+      left: 50%;
+      width: 100vw;
+      margin-left: -50vw;
+      border-top: 1px dotted rgba(0, 0, 0, .35);
+      border-bottom: 1px dotted rgba(0, 0, 0, .35);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .about-row-line:nth-child(7) { grid-row: 1; }
+    .about-row-line:nth-child(8) { grid-row: 2; }
+    .about-row-line:nth-child(9) { grid-row: 3; }
+
+    .about-col-text {
+      grid-row: 2 / 3;
+      padding: 5px;
+      color: var(--ink-on-paper);
+      font-family: var(--font-office);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.6;
+      letter-spacing: -0.02em;
+    }
+
+    .about-col-text p {
+      margin: 0 0 1.4em;
+    }
+
+    .about-col-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-photo {
+      --wipe-in: 500ms;
+      --fade-out: 700ms;
+      --wipe-hold: 9000ms;
+      --focus: center;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      margin: 5px;
+      width: calc(100% - 10px);
+      height: calc(100% - 10px);
+    }
+
+    .about-photo-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: var(--focus);
+      clip-path: inset(0 0 0 0);
+    }
+
+    .about-photo.is-cycling .about-photo-img {
+      visibility: hidden;
+    }
+
+    .about-photo.is-cycling.is-entering .about-photo-img,
+    .about-photo.is-cycling.is-showing .about-photo-img,
+    .about-photo.is-cycling.is-leaving .about-photo-img {
+      visibility: visible;
+    }
+
+    .about-photo.is-entering .about-photo-img {
+      animation: about-reveal-up var(--wipe-in) cubic-bezier(.9, 0, .1, 1) both;
+    }
+
+    .about-photo.is-cycling.is-leaving .about-photo-img {
+      animation: about-fade-out var(--fade-out) ease both;
+    }
+
+    @keyframes about-reveal-up {
+      from { clip-path: inset(100% 0 0 0); }
+      to { clip-path: inset(0 0 0 0); }
+    }
+
+    @keyframes about-fade-out {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    .about-photo-bike {
+      grid-column: 1 / 3;
+      grid-row: 1;
+    }
+
+    .about-photo-portrait {
+      grid-column: 5 / -1;
+      grid-row: 2 / -1;
+    }
+
+    @media (max-width: 900px) {
+      :root {
+        --contact-height: 35px;
+      }
+
+      .contact-trigger {
+        left: auto;
+        right: 25px;
+        padding: 8px 14px;
+        font-size: 16px;
+      }
+
+      .office-title {
+        font-size: clamp(30px, 9vw, 56px);
+      }
+
+      .about-frame-line-top,
+      .about-frame-line-bottom {
+        display: block;
+      }
+
+      .about-col-line,
+      .about-row-line {
+        display: none;
+      }
+
+      .about-screen {
+        height: 100dvh;
+        overflow: hidden;
+      }
+
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto 22px 1fr;
+        gap: 0;
+        padding: calc(var(--frame-top) + var(--contact-height) + 22px - 20px) 5px 5px;
+      }
+
+      .about-col-text + .about-col-text {
+        margin-top: 12px;
+      }
+
+      .about-col-text {
+        padding: 0;
+        font-size: clamp(14px, 2.05dvh, 17px);
+      }
+
+      .about-col-text:nth-of-type(1) { grid-column: 1; grid-row: 1; }
+      .about-col-text:nth-of-type(2) { grid-column: 1; grid-row: 2; }
+      .about-col-text:nth-of-type(3) { grid-column: 1; grid-row: 3; }
+
+      .about-photo {
+        grid-column: 1;
+        grid-row: 5;
+        place-self: center;
+        margin: 0;
+        width: 100%;
+        height: auto;
+        max-height: 100%;
+      }
+
+      .about-photo-portrait {
+        aspect-ratio: 1 / 1;
+      }
+
+      .about-photo-bike {
+        aspect-ratio: 2 / 1;
+      }
+    }
+
+    /* ---- Business card modal ---- */
+    .card-overlay {
+      position: fixed;
+      z-index: 200;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 320ms ease, visibility 0s linear 320ms;
+    }
+
+    .card-overlay[data-open="true"] {
+      visibility: visible;
+      transition: opacity 320ms ease, visibility 0s linear;
+    }
+
+    .card-overlay[data-open="true"] .card-backdrop {
+      backdrop-filter: blur(8px);
+    }
+
+    .card-overlay[data-open="true"] {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .card-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 7, 12, .74);
+    }
+
+    .business-card {
+      container-type: inline-size;
+      position: relative;
+      z-index: 1;
+      width: min(100%, 84vw, 1180px, calc(78vh * 1.6));
+      aspect-ratio: 16 / 10;
+      border-radius: 3px;
+      overflow: hidden;
+      box-shadow: 0 50px 100px rgba(0, 0, 0, .55);
+      transform: scale(.94);
+      transition: transform 320ms var(--ease);
+    }
+
+    .card-overlay[data-open="true"] .business-card {
+      transform: scale(1);
+    }
+
+    .card-texture {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-face {
+      --card-text: max(15px, 1.85cqw);
+      --card-name: max(16px, 2.03cqw);
+      --card-gap: max(12px, 1.87cqw);
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      width: 100%;
+      height: 100%;
+      padding: 6% 6.5%;
+      color: #020202;
+      font-family: var(--font-office);
+    }
+
+    .card-top-row {
+      grid-row: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--card-gap);
+    }
+
+    .card-email {
+      font-size: var(--card-text);
+      font-weight: 600;
+    }
+
+    .card-brand {
+      display: grid;
+      justify-items: start;
+      gap: 2px;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+
+    .card-brand span {
+      font-size: var(--card-text);
+    }
+
+    .card-name {
+      grid-row: 2;
+      align-self: center;
+      justify-self: center;
+      display: grid;
+      gap: max(5px, .9cqw);
+      text-align: center;
+    }
+
+    .card-name-main {
+      font-size: var(--card-name);
+      font-weight: 600;
+    }
+
+    .card-name-role {
+      font-size: var(--card-name);
+      font-weight: 600;
+    }
+
+    .card-footer {
+      grid-row: 3;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: max(3px, .44cqw) var(--card-gap);
+      font-size: var(--card-text);
+      font-weight: 600;
+    }
+
+    .card-email,
+    .card-footer a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+      padding: 2px 6px;
+      margin: 0 -6px;
+      transition: background 200ms ease, color 200ms ease;
+    }
+
+    .card-email:hover,
+    .card-footer a:hover {
+      background: var(--mint);
+      color: var(--ink-on-paper);
+      text-decoration-color: transparent;
+    }
+
+    .card-close {
+      display: none;
+    }
+
+    .card-email:focus-visible,
+    .card-footer a:focus-visible {
+      outline: 2px solid var(--ink-on-paper);
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 560px) {
+      .business-card {
+        width: min(100%, calc(84vh / 1.6));
+        aspect-ratio: 10 / 16;
+      }
+
+      .card-top-row,
+      .card-footer {
+        display: contents;
+      }
+
+      .card-face {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr auto auto auto;
+        row-gap: max(5px, 1.2cqw);
+      }
+
+      .card-brand {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
+      }
+
+      .card-close {
+        display: block;
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: end;
+        align-self: start;
+        position: relative;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font-family: inherit;
+        font-size: 14px;
+        line-height: inherit;
+        transform: scale(2);
+        transform-origin: right center;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .card-close::after {
+        content: "";
+        position: absolute;
+        inset: -14px;
+      }
+
+      .card-close:focus-visible {
+        outline: 2px solid var(--ink-on-paper);
+        outline-offset: 2px;
+      }
+
+      .card-location {
+        grid-column: 1;
+        grid-row: 2;
+        justify-self: start;
+      }
+
+      .card-name {
+        grid-column: 1;
+        grid-row: 3;
+      }
+
+      .card-email,
+      .card-footer a {
+        font-size: calc(var(--card-text) * 1.1);
+      }
+
+      .card-email {
+        grid-column: 1;
+        grid-row: 4;
+        justify-self: end;
+      }
+
+      .card-linkedin {
+        grid-column: 1;
+        grid-row: 5;
+        justify-self: end;
+      }
+
+      .card-github {
+        grid-column: 1;
+        grid-row: 6;
+        justify-self: end;
+      }
+    }
+
+  </style>
+</head>
+<body data-mode="shelf">
+  <button class="contact-trigger" id="contactButton" type="button"><span class="contact-label">Contact</span></button>
+
+  <section class="office-screen" aria-label="Daniyar Kalikulov's office">
+    <img class="office-photo" src="images/office.jpg" alt="">
+    <canvas class="office-models office-models-back" id="officeModelsBack" aria-hidden="true"></canvas>
+    <h1 class="office-title">Daniyar's Office</h1>
+    <canvas class="office-models office-models-front" id="officeModelsFront" aria-hidden="true"></canvas>
+    <button class="nav-chip scroll-hint" id="scrollHint" type="button" aria-label="Scroll down to the About screen">
+      <svg viewBox="5 3 14 16" aria-hidden="true">
+        <path d="M12 4v14m0 0-6-6m6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </section>
+
+  <section class="about-screen" id="about" aria-label="About Daniyar Kalikulov">
+    <span class="about-frame-line about-frame-line-left" aria-hidden="true"></span>
+    <span class="about-frame-line about-frame-line-right" aria-hidden="true"></span>
+    <span class="about-frame-line about-frame-line-top" aria-hidden="true"></span>
+    <span class="about-frame-line about-frame-line-bottom" aria-hidden="true"></span>
+    <div class="about-inner">
+      <div class="about-content">
+        <div class="about-grid">
+        <span class="about-col-line" aria-hidden="true"></span>
+        <span class="about-col-line" aria-hidden="true"></span>
+        <span class="about-col-line" aria-hidden="true"></span>
+        <span class="about-col-line" aria-hidden="true"></span>
+        <span class="about-col-line" aria-hidden="true"></span>
+        <span class="about-col-line" aria-hidden="true"></span>
+        <span class="about-row-line" aria-hidden="true"></span>
+        <span class="about-row-line" aria-hidden="true"></span>
+        <span class="about-row-line" aria-hidden="true"></span>
+        <div class="about-col about-col-text">
+          <p>Welcome, my name is Daniyar, I'm a Web Development student at SRH University in Berlin. I work with both design and code: UX/UI in Figma, and TypeScript, JavaScript, React and React Native.</p>
+        </div>
+        <div class="about-col about-col-text">
+          <p>For me development starts with asking the right questions. I like building what people actually see and use, so I lean front-end, but I've done back-end work too.</p>
+        </div>
+        <div class="about-col about-col-text">
+          <p>Below you'll find the projects I've built, what I did on each one, and links to them. All three are university work, but one made it to the App Store.</p>
+        </div>
+        <div class="about-photo about-photo-bike">
+          <img class="about-photo-img" src="images/photo-bike.jpg" alt="Daniyar Kalikulov riding a road bike on a velodrome">
+        </div>
+        <div class="about-photo about-photo-portrait">
+          <img class="about-photo-img" src="images/photo-portrait.jpg" alt="Daniyar Kalikulov in a navy suit, looking at the camera">
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="stage" aria-label="Daniyar Kalikulov's project portfolio">
+    <div class="stage-grid" aria-hidden="true">
+      <span class="stage-frame-line stage-frame-line-left"></span>
+      <span class="stage-frame-line stage-frame-line-right"></span>
+      <span class="stage-frame-line stage-frame-line-top"></span>
+      <span class="stage-frame-line stage-frame-line-bottom"></span>
+      <div class="stage-grid-inner">
+        <span class="stage-col-line"></span>
+        <span class="stage-col-line"></span>
+        <span class="stage-col-line"></span>
+        <span class="stage-col-line"></span>
+        <span class="stage-col-line"></span>
+        <span class="stage-col-line"></span>
+        <span class="stage-row-line"></span>
+        <span class="stage-row-line"></span>
+        <span class="stage-row-line"></span>
+      </div>
+    </div>
+    <h1 class="hero-word" aria-hidden="true">Projects</h1>
+
+    <div class="shelf-nav" id="shelfNav">
+      <button class="nav-chip" type="button" data-step="-1" aria-label="Previous project">
+        <svg viewBox="5 3 14 16" aria-hidden="true">
+          <path d="M12 4v14m0 0-6-6m6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <span class="nav-dots" id="shelfDots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <button class="nav-chip" type="button" data-step="1" aria-label="Next project">
+        <svg viewBox="5 3 14 16" aria-hidden="true">
+          <path d="M12 4v14m0 0-6-6m6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <section class="shelf" aria-label="Featured projects">
+      <button
+        class="book-card"
+        type="button"
+        data-book="mittweida"
+        aria-label="Open Mittweida Day-Trip Guide details"
+        style="
+          --cover-color: #101a2c;
+        "
+      >
+        <span class="book" aria-hidden="true">
+          <span class="book-shadow"></span>
+          <span class="book-back"></span>
+          <span class="page-block"></span>
+          <span class="page-fan"><i></i><i></i><i></i><i></i></span>
+          <span class="front-cover">
+            <span class="cover-copy">
+              <span class="cover-kicker">Project · II</span>
+              <span class="cover-title">Mittweida</span>
+              <span class="cover-subtitle">web application</span>
+              <span class="cover-emblem" aria-hidden="true">M</span>
+              <span class="cover-footer">React · NestJS · Figma</span>
+            </span>
+          </span>
+          <span class="open-badge">Read</span>
+        </span>
+      </button>
+
+      <button
+        class="book-card"
+        type="button"
+        data-book="detris"
+        aria-label="Open DEtris details"
+        style="
+          --cover-color: #3a1420;
+        "
+      >
+        <span class="book" aria-hidden="true">
+          <span class="book-shadow"></span>
+          <span class="book-back"></span>
+          <span class="page-block"></span>
+          <span class="page-fan"><i></i><i></i><i></i><i></i></span>
+          <span class="front-cover">
+            <span class="cover-copy">
+              <span class="cover-kicker">Project · I</span>
+              <span class="cover-title">DEtris</span>
+              <span class="cover-subtitle">published mobile game</span>
+              <span class="cover-emblem" aria-hidden="true">D</span>
+              <span class="cover-footer">React Native · TypeScript · Expo</span>
+            </span>
+          </span>
+          <span class="open-badge">Read</span>
+        </span>
+      </button>
+
+      <button
+        class="book-card"
+        type="button"
+        data-book="atmosfair"
+        aria-label="Open Atmosfair Integration in Booking Flow details"
+        style="
+          --cover-color: #152a1e;
+        "
+      >
+        <span class="book" aria-hidden="true">
+          <span class="book-shadow"></span>
+          <span class="book-back"></span>
+          <span class="page-block"></span>
+          <span class="page-fan"><i></i><i></i><i></i><i></i></span>
+          <span class="front-cover">
+            <span class="cover-copy">
+              <span class="cover-kicker">Project · III</span>
+              <span class="cover-title">CO₂ Offset</span>
+              <span class="cover-subtitle">for atmosfair</span>
+              <span class="cover-emblem" aria-hidden="true">C</span>
+              <span class="cover-footer">Figma · ProtoPie · Sheets</span>
+            </span>
+          </span>
+          <span class="open-badge">Read</span>
+        </span>
+      </button>
+    </section>
+
+    <div class="stage-flow">
+    <section class="detail-panel" id="detailPanel" aria-live="polite" aria-hidden="true" inert>
+      <h2 class="detail-title" id="detailTitle">Mittweida Day-Trip Guide</h2>
+      <div class="detail-scroll" id="detailScroll" tabindex="0" aria-label="Project description">
+        <p class="detail-description" id="detailDescription"></p>
+        <ul class="detail-points" id="detailPoints"></ul>
+      </div>
+      <div class="bottom-dock">
+        <p class="detail-tech" id="detailTech"></p>
+        <hr class="detail-rule">
+        <div class="action-rail" aria-label="Project links">
+          <a class="pill" id="detailLink1" href="#" target="_blank" rel="noopener noreferrer" hidden></a>
+          <a class="pill" id="detailLink2" href="#" target="_blank" rel="noopener noreferrer" hidden></a>
+        </div>
+      </div>
+    </section>
+
+    <div class="project-media" id="projectMedia" aria-hidden="true">
+      <div class="project-media-gap"></div>
+      <div class="project-media-shots" id="projectShots"></div>
+    </div>
+
+    <div class="media-nav" id="mediaNav" hidden>
+      <button class="nav-chip" type="button" data-step="-1" aria-label="Previous screen">
+        <svg viewBox="5 3 14 16" aria-hidden="true">
+          <path d="M12 4v14m0 0-6-6m6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <span class="nav-dots" id="mediaDots" aria-hidden="true"></span>
+      <button class="nav-chip" type="button" data-step="1" aria-label="Next screen">
+        <svg viewBox="5 3 14 16" aria-hidden="true">
+          <path d="M12 4v14m0 0-6-6m6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    </div>
+
+    <button class="scroll-nav" id="scrollNav" type="button" aria-label="Next project screen" tabindex="-1">
+      <svg viewBox="5 3 14 16" aria-hidden="true">
+        <path d="M12 4v14m0 0-6-6m6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="scroll-count" id="scrollCount" aria-live="polite"></span>
+    </button>
+
+    <p class="detail-kicker" id="detailKicker" aria-hidden="true"></p>
+    <button class="close-button" id="closeButton" type="button" aria-label="Close detail view" tabindex="-1">×</button>
+  </main>
+
+  <div class="card-overlay" id="cardOverlay" aria-hidden="true">
+    <div class="card-backdrop" data-card-close></div>
+    <div class="business-card" role="dialog" aria-label="Business card">
+      <img class="card-texture" src="images/paper-texture.jpg" alt="">
+      <div class="card-face">
+        <button class="card-close" type="button" data-card-close aria-label="Close card">×</button>
+        <div class="card-top-row">
+          <div class="card-brand">
+            <span>Web Development &amp; Design</span>
+          </div>
+          <a class="card-email" href="mailto:daniyar.kalikulov@gmail.com">daniyar.kalikulov@gmail.com</a>
+        </div>
+        <div class="card-name">
+          <span class="card-name-main">Daniyar KALIKULOV</span>
+          <span class="card-name-role">Web Developer</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-location">Berlin, Germany</span>
+          <a class="card-github" href="https://github.com/DaniyarKalikulovDev" target="_blank" rel="noopener noreferrer">github.com/DaniyarKalikulovDev</a>
+          <a class="card-linkedin" href="https://www.linkedin.com/in/daniyarkalikulov/" target="_blank" rel="noopener noreferrer">linkedin.com/in/daniyarkalikulov</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const books = {
+        mittweida: {
+          title: "Mittweida Day-Trip Guide",
+          year: "2025",
+          description:
+            "A web app for planning short day trips around Mittweida: pick a route, see it on a map, and follow step-by-step navigation.",
+          points: [
+            "Designed the full UI/UX and user flow in Figma before writing any code.",
+            "Built the frontend in React and TypeScript on Vite, matching the Figma design.",
+            "Wrote the backend in Node.js and NestJS, with a REST API for data exchange between front and back.",
+            "Added a feedback and rating system so each route can be scored by the people who walked it."
+          ],
+          tech: "React · TypeScript · Vite · Node.js · NestJS · REST API · Figma",
+          screens: [
+            { src: "images/projects/mittweida-routes.jpg", w: 900, h: 1864, alt: "Route list with the map above it" },
+            { src: "images/projects/mittweida-navigation.jpg", w: 900, h: 1864, alt: "Step-by-step navigation along a route" }
+          ],
+          links: [
+            { label: "Frontend on GitHub", href: "https://github.com/DaniyarKalikulovDev/mittweida-frontend" },
+            { label: "Backend on GitHub", href: "https://github.com/DaniyarKalikulovDev/mittweida-backend" }
+          ]
+        },
+        detris: {
+          title: "DEtris Mobile Game",
+          year: "2026",
+          description:
+            "DEtris teaches German sentence structure. German words fall, and you put each one into the color zone matching its grammatical role — subject, verb, object.",
+          points: [
+            "Shipped it to the App Store and set up the release pipeline on EAS Build and Submit — TestFlight distribution and Google Play closed testing.",
+            "Rebuilt the layout system after two App Review rejections — every screen now sizes itself from the live window instead of a value read once at launch, which also fixed the board being clipped on smaller iPhones.",
+            "Wrote the game engine from scratch: a gravity loop with sub-step interpolation, level-based speed scaling, scoring, and grammar validation against a custom sentence dataset.",
+            "Designed a custom gesture system on PanResponder — hold to move, flick to drop, tap to cycle word forms — with user-configurable touch sensitivity.",
+            "Ran audio and haptics through a player pool, so sound effects are never dropped during rapid input.",
+            "Made it offline-first: settings and high scores live in AsyncStorage, and the app runs entirely on-device with no backend.",
+            "Designed the UI/UX, onboarding and prototypes in Figma and ProtoPie, then reworked the control scheme after testing with 10 people."
+          ],
+          tech: "React Native · TypeScript · Expo · EAS Build · Figma · ProtoPie",
+          screens: [
+            {
+              src: "images/projects/detris-gameplay.mp4",
+              poster: "images/projects/detris-gameplay.jpg",
+              w: 720,
+              h: 1492,
+              video: true,
+              alt: "Gameplay: German words fall and are dropped into the subject, verb and object zones"
+            }
+          ],
+          links: [
+            { label: "Download on the App Store", href: "https://apps.apple.com/app/id6805521254" }
+          ]
+        },
+        atmosfair: {
+          title: "CO₂ Offset in the Booking Flow",
+          year: "2025",
+          description:
+            "A group project with [atmosfair](https://www.atmosfair.de/en/) on getting CO₂ compensation into a flight booking flow without distracting the user. My team came up with three solutions; integration through email was my idea.",
+          points: [
+            "Built three versions of the flight confirmation email that differed in one thing only: where the offset link sat — mid-body, mid-body with an image above it, or directly under the confirmation line.",
+            "Tested them on 30 people, ten per version, in a clickable ProtoPie prototype with every session logged to a Google Sheet.",
+            "The link at the top won: 8 of 10 clicked it, against 6 for the version with the image and 3 for mid-body. People gave each email about 15 seconds, so the ask had to land before they decided the mail was done.",
+            "Reading the numbers: a picture bought some attention, but placement bought more — the eye never reached an ask parked below the fold of a mail nobody intended to read twice.",
+            "Put the offset on the confirmation email because it leaves the booking itself untouched — it arrives once the payment is done, not while someone is picking seats."
+          ],
+          tech: "Figma · ProtoPie · Google Sheets",
+          links: [
+            { label: "Team presentation", href: "https://www.canva.com/design/DAGsxjT1X70/M7klrwDBMkSHxTinwKP4AA/view" }
+          ]
+        }
+      };
+
+      const body = document.body;
+      const stage = document.querySelector(".stage");
+      let openingTimer = 0;
+      const cards = [...document.querySelectorAll(".book-card")];
+      const detailPanel = document.querySelector("#detailPanel");
+      const detailTitle = document.querySelector("#detailTitle");
+      const detailScroll = document.querySelector("#detailScroll");
+      const detailDescription = document.querySelector("#detailDescription");
+      const detailPoints = document.querySelector("#detailPoints");
+      const detailTech = document.querySelector("#detailTech");
+      const actionRail = document.querySelector(".action-rail");
+      const projectMedia = document.querySelector("#projectMedia");
+      const projectShots = document.querySelector("#projectShots");
+      const scrollNav = document.querySelector("#scrollNav");
+      const scrollCount = document.querySelector("#scrollCount");
+      const detailLinks = [document.querySelector("#detailLink1"), document.querySelector("#detailLink2")];
+      const closeButton = document.querySelector("#closeButton");
+      const detailKicker = document.querySelector("#detailKicker");
+      const stageFlow = document.querySelector(".stage-flow");
+      const mediaNav = document.querySelector("#mediaNav");
+      const mediaDots = document.querySelector("#mediaDots");
+      const toast = document.querySelector("#toast");
+      const contactButton = document.querySelector("#contactButton");
+      const cardOverlay = document.querySelector("#cardOverlay");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const coverVideos = [...document.querySelectorAll(".cover-motion")];
+      let selectedCard = null;
+      let closeCleanupTimer = 0;
+      let toastTimer = 0;
+      let frame = 0;
+      let pointerX = 0;
+      let pointerY = 0;
+      let pointerClientX = -10000;
+      let pointerClientY = -10000;
+
+      function showToast(message) {
+        window.clearTimeout(toastTimer);
+        toast.textContent = message;
+        toast.dataset.show = "true";
+        toastTimer = window.setTimeout(() => {
+          toast.dataset.show = "false";
+        }, 1800);
+      }
+
+      function syncCoverMotion() {
+        coverVideos.forEach((video) => {
+          const card = video.closest(".book-card");
+          const isVisibleBook =
+            body.dataset.mode === "shelf" ||
+            (body.dataset.mode === "detail" && card === selectedCard);
+          const shouldPlay =
+            !reducedMotion.matches &&
+            !document.hidden &&
+            isVisibleBook;
+
+          if (!shouldPlay) {
+            video.pause();
+            return;
+          }
+
+          const playRequest = video.play();
+          if (playRequest) playRequest.catch(() => {});
+        });
+      }
+
+      function updateParallax() {
+        frame = 0;
+        if (reducedMotion.matches) return;
+
+        if (body.dataset.mode === "detail" && selectedCard) {
+          const bounds = selectedCard.getBoundingClientRect();
+          const bookCenterX = bounds.left + bounds.width / 2;
+          const bookCenterY = bounds.top + bounds.height / 2;
+          const isPointerInViewport =
+            pointerClientX >= 0 &&
+            pointerClientX <= window.innerWidth &&
+            pointerClientY >= 0 &&
+            pointerClientY <= window.innerHeight;
+          const horizontalReach = pointerClientX < bookCenterX
+            ? Math.max(bookCenterX, 1)
+            : Math.max(window.innerWidth - bookCenterX, 1);
+          const verticalReach = pointerClientY < bookCenterY
+            ? Math.max(bookCenterY, 1)
+            : Math.max(window.innerHeight - bookCenterY, 1);
+          const viewportX = isPointerInViewport
+            ? Math.max(-1, Math.min(1, (pointerClientX - bookCenterX) / horizontalReach))
+            : -5 / 16;
+          const viewportY = isPointerInViewport
+            ? Math.max(-1, Math.min(1, (pointerClientY - bookCenterY) / verticalReach))
+            : 0;
+          selectedCard.style.setProperty("--detail-yaw", `${viewportX * 16}deg`);
+          selectedCard.style.setProperty("--detail-pitch", `${viewportY * -10}deg`);
+          selectedCard.dataset.orbiting = String(isPointerInViewport);
+          return;
+        }
+
+        if (body.dataset.mode !== "shelf") return;
+        if (narrowShelf.matches) return;
+
+        document.documentElement.style.setProperty("--mx", `${pointerX * 11}px`);
+        document.documentElement.style.setProperty("--my", `${pointerY * 8}px`);
+
+        cards.forEach((card, index) => {
+          const depth = index === 1 ? 1 : .58;
+          card.style.setProperty("--local-x", `${pointerX * 15 * depth}px`);
+          card.style.setProperty("--local-y", `${pointerY * 9 * depth}px`);
+        });
+      }
+
+      function selectBook(card) {
+        if (body.dataset.mode === "detail") return;
+        const data = books[card.dataset.book];
+        if (!data) return;
+
+        if (closeCleanupTimer) {
+          window.clearTimeout(closeCleanupTimer);
+          closeCleanupTimer = 0;
+        }
+
+        selectedCard = card;
+        selectedCard.style.setProperty("--detail-yaw", "-5deg");
+        selectedCard.style.setProperty("--detail-pitch", "0deg");
+        selectedCard.dataset.orbiting = "false";
+        detailTitle.textContent = data.title;
+        renderDescription(data.description);
+        detailPoints.replaceChildren(...data.points.map((point) => {
+          const item = document.createElement("li");
+          item.textContent = point;
+          return item;
+        }));
+        detailTech.textContent = data.tech;
+        actionRail.hidden = data.links.length === 0;
+        actionRail.parentElement.classList.toggle("is-linkless", actionRail.hidden);
+
+        const screens = data.screens || [];
+        projectShots.replaceChildren(...screens.map((shot) => {
+          const slide = document.createElement("div");
+          slide.className = "project-slide";
+          const media = document.createElement(shot.video ? "video" : "img");
+          media.src = shot.src;
+          media.width = shot.w;
+          media.height = shot.h;
+          if (shot.video) {
+            media.muted = true;
+            media.loop = true;
+            media.playsInline = true;
+            media.preload = "metadata";
+            if (shot.poster) media.poster = shot.poster;
+            media.setAttribute("aria-label", shot.alt);
+          } else {
+            media.alt = shot.alt;
+            media.decoding = "async";
+          }
+          slide.appendChild(media);
+          return slide;
+        }));
+        projectMedia.scrollTop = 0;
+        projectMedia.scrollLeft = 0;
+        mediaIndex = 0;
+        projectMedia.hidden = screens.length === 0;
+        const kicker = card.querySelector(".cover-kicker");
+        detailKicker.textContent = kicker ? kicker.textContent : "";
+        syncMediaNav();
+        card.classList.remove("is-tracking");
+        card.style.removeProperty("--media-shift");
+        syncScrollHint();
+        detailLinks.forEach((el, index) => {
+          const link = data.links[index];
+          if (link) {
+            el.textContent = link.label;
+            el.href = link.href;
+            el.hidden = false;
+          } else {
+            el.hidden = true;
+          }
+        });
+        syncContactInset();
+        syncDockHeight();
+        detailScroll.scrollTop = 0;
+        syncTextFade();
+        const startMode = body.dataset.mode;
+        card.classList.add("is-fitting");
+        card.classList.add("selected");
+        body.dataset.mode = "detail";
+        card.offsetHeight;
+        measureAndFit(card);
+        body.dataset.mode = startMode;
+        card.classList.remove("selected");
+        card.offsetHeight;
+        card.classList.remove("is-fitting");
+        card.offsetHeight;
+        card.classList.add("is-opening");
+        cards.forEach((item) => item.classList.toggle("selected", item === card));
+        lockPage();
+        body.dataset.mode = "detail";
+        stageFlow.scrollTop = 0;
+        syncFlowFade();
+        syncMediaNav();
+        window.clearTimeout(openingTimer);
+        openingTimer = window.setTimeout(() => {
+          cards.forEach((item) => item.classList.remove("is-opening"));
+        }, 1150);
+
+        cards.forEach((item) => { item.tabIndex = -1; });
+        syncCoverMotion();
+        detailPanel.setAttribute("aria-hidden", "false");
+        detailPanel.inert = false;
+        closeButton.tabIndex = 0;
+        window.setTimeout(() => {
+          closeButton.focus({ preventScroll: true });
+          if (window.innerWidth > 900) stage.scrollTop = 0;
+        }, reducedMotion.matches ? 0 : 700);
+      }
+
+      function closeDetail() {
+        if (body.dataset.mode !== "detail") return;
+        window.clearTimeout(openingTimer);
+        cards.forEach((item) => item.classList.remove("is-opening"));
+        body.dataset.mode = "shelf";
+        unlockPage();
+        syncCoverMotion();
+        detailPanel.setAttribute("aria-hidden", "true");
+        detailPanel.inert = true;
+        closeButton.tabIndex = -1;
+        const lastCard = selectedCard;
+        lastCard?.style.setProperty("--detail-yaw", "-5deg");
+        lastCard?.style.setProperty("--detail-pitch", "0deg");
+        if (lastCard) lastCard.dataset.orbiting = "false";
+        window.clearTimeout(closeCleanupTimer);
+        closeCleanupTimer = window.setTimeout(() => {
+          closeCleanupTimer = 0;
+          cards.forEach((card) => card.classList.remove("selected"));
+          cards.forEach((card) => { card.tabIndex = 0; });
+          selectedCard = null;
+          lastCard?.focus({ preventScroll: true });
+          if (window.innerWidth > 900) stage.scrollTop = 0;
+        }, reducedMotion.matches ? 0 : 700);
+      }
+
+      function toggleCard(force) {
+        const willOpen = typeof force === "boolean"
+          ? force
+          : cardOverlay.dataset.open !== "true";
+        cardOverlay.dataset.open = String(willOpen);
+        cardOverlay.setAttribute("aria-hidden", String(!willOpen));
+        cardOverlay.inert = !willOpen;
+        contactButton.setAttribute("aria-expanded", String(willOpen));
+      }
+
+      const narrowShelf = window.matchMedia("(max-width: 900px)");
+
+      /* An open project is a screen of its own, so the page behind it must not
+         move. `overflow: hidden` on the root is the usual way to say that and
+         it is quietly ignored by Safari on iOS, which is what let the page keep
+         scrolling on to the other screens with a book open. Taking the body out
+         of flow at its current offset holds everywhere: the document has
+         nothing left to scroll, and the offset is given back on the way out. */
+      let lockedAt = 0;
+
+      function lockPage() {
+        if (!narrowShelf.matches || body.hasAttribute("data-locked")) return;
+        lockedAt = window.scrollY;
+        body.style.top = -lockedAt + "px";
+        body.setAttribute("data-locked", "");
+      }
+
+      function unlockPage() {
+        if (!body.hasAttribute("data-locked")) return;
+        body.removeAttribute("data-locked");
+        body.style.top = "";
+        window.scrollTo({ top: lockedAt, behavior: "instant" });
+      }
+      const shelf = document.querySelector(".shelf");
+      const SWIPE_THRESHOLD = 40;
+      let shelfIndex = 1;
+      let swipeX = 0;
+      let swipeY = 0;
+      let tracking = false;
+      let swiped = false;
+
+      const shelfDots = [...document.querySelectorAll("#shelfDots i")];
+      const shelfArrows = [...document.querySelectorAll(".nav-chip")];
+
+      function setShelfIndex(next) {
+        shelfIndex = Math.max(0, Math.min(cards.length - 1, next));
+        shelf.style.setProperty("--shelf-index", String(shelfIndex));
+        shelfDots.forEach((dot, index) => {
+          dot.dataset.on = String(index === shelfIndex);
+        });
+        shelfArrows.forEach((arrow) => {
+          const step = Number(arrow.dataset.step);
+          arrow.disabled = shelfIndex + step < 0 || shelfIndex + step > cards.length - 1;
+        });
+      }
+
+      shelfArrows.forEach((arrow) => {
+        arrow.addEventListener("click", () => {
+          setShelfIndex(shelfIndex + Number(arrow.dataset.step));
+        });
+      });
+
+      setShelfIndex(shelfIndex);
+
+      shelf.addEventListener("pointerdown", (event) => {
+        if (!narrowShelf.matches || body.dataset.mode !== "shelf") return;
+        tracking = true;
+        swiped = false;
+        swipeX = event.clientX;
+        swipeY = event.clientY;
+      });
+
+      shelf.addEventListener("pointermove", (event) => {
+        if (!tracking || swiped) return;
+        const dx = event.clientX - swipeX;
+        const dy = event.clientY - swipeY;
+        if (Math.abs(dy) > Math.abs(dx)) {
+          tracking = false;
+          return;
+        }
+        if (Math.abs(dx) < SWIPE_THRESHOLD) return;
+        setShelfIndex(shelfIndex + (dx < 0 ? 1 : -1));
+        swiped = true;
+      });
+
+      const endSwipe = () => { tracking = false; };
+      shelf.addEventListener("pointerup", endSwipe);
+      shelf.addEventListener("pointercancel", endSwipe);
+
+      shelf.addEventListener("click", (event) => {
+        if (!swiped) return;
+        swiped = false;
+        event.stopPropagation();
+        event.preventDefault();
+      }, true);
+
+      cards.forEach((card, index) => {
+        card.addEventListener("click", () => {
+          if (narrowShelf.matches && body.dataset.mode === "shelf" && index !== shelfIndex) {
+            setShelfIndex(index);
+            return;
+          }
+          selectBook(card);
+        });
+        card.addEventListener("focus", () => {
+          if (narrowShelf.matches && body.dataset.mode === "shelf") setShelfIndex(index);
+        });
+        card.addEventListener("pointerenter", () => card.dataset.hovered = "true");
+        card.addEventListener("pointerleave", () => card.dataset.hovered = "false");
+      });
+
+      coverVideos.forEach((video) => {
+        const revealVideo = () => { video.dataset.ready = "true"; };
+        if (video.readyState >= 2) {
+          revealVideo();
+        } else {
+          video.addEventListener("loadeddata", revealVideo, { once: true });
+        }
+      });
+
+      document.addEventListener("visibilitychange", syncCoverMotion);
+      if (reducedMotion.addEventListener) {
+        reducedMotion.addEventListener("change", syncCoverMotion);
+      } else {
+        reducedMotion.addListener(syncCoverMotion);
+      }
+      syncCoverMotion();
+
+      window.addEventListener("pointermove", (event) => {
+        pointerX = event.clientX / window.innerWidth - .5;
+        pointerY = event.clientY / window.innerHeight - .5;
+        pointerClientX = event.clientX;
+        pointerClientY = event.clientY;
+        if (!frame) frame = window.requestAnimationFrame(updateParallax);
+      }, { passive: true });
+
+      window.addEventListener("pointerleave", () => {
+        pointerX = 0;
+        pointerY = 0;
+        pointerClientX = -10000;
+        pointerClientY = -10000;
+        if (!frame) frame = window.requestAnimationFrame(updateParallax);
+      });
+
+      closeButton.addEventListener("click", closeDetail);
+      function syncDockHeight() {
+        const dock = document.querySelector(".bottom-dock");
+        if (!dock) return;
+        document.documentElement.style.setProperty(
+          "--dock-height",
+          dock.getBoundingClientRect().height.toFixed(2) + "px"
+        );
+      }
+
+      const DESCRIPTION_LINK = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+      function renderDescription(text) {
+        const parts = [];
+        let at = 0;
+        for (const match of text.matchAll(DESCRIPTION_LINK)) {
+          if (match.index > at) parts.push(document.createTextNode(text.slice(at, match.index)));
+          const link = document.createElement("a");
+          link.textContent = match[1];
+          link.href = match[2];
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          parts.push(link);
+          at = match.index + match[0].length;
+        }
+        if (at < text.length) parts.push(document.createTextNode(text.slice(at)));
+        detailDescription.replaceChildren(...parts);
+      }
+
+      function syncTextFade() {
+        const last = detailScroll.lastElementChild;
+        if (!last) return;
+        const content = last.getBoundingClientRect().bottom -
+          detailScroll.getBoundingClientRect().top + detailScroll.scrollTop;
+        detailScroll.classList.toggle(
+          "is-clipped",
+          content > detailScroll.clientHeight + 1
+        );
+      }
+
+      function syncContactInset() {
+        const edge = contactButton.getBoundingClientRect().right;
+        document.documentElement.style.setProperty(
+          "--contact-inset",
+          Math.max(0, Math.round(window.innerWidth - edge)) + "px"
+        );
+      }
+
+      syncContactInset();
+      syncDockHeight();
+      if ("ResizeObserver" in window) {
+        const insetObserver = new ResizeObserver(syncContactInset);
+        insetObserver.observe(document.documentElement);
+        insetObserver.observe(contactButton);
+
+        const dockObserver = new ResizeObserver(syncDockHeight);
+        dockObserver.observe(document.querySelector(".bottom-dock"));
+      }
+      window.addEventListener("resize", syncContactInset);
+      window.addEventListener("resize", syncDockHeight);
+      window.addEventListener("resize", syncTextFade);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(syncContactInset);
+        document.fonts.ready.then(syncDockHeight);
+      }
+
+      function syncScrollHint() {
+        const step = projectMedia.clientHeight;
+        const total = step < 1 ? 1 : Math.max(1, Math.round(projectMedia.scrollHeight / step));
+        const at = step < 1 ? 0 : Math.min(total - 1, Math.round(projectMedia.scrollTop / step));
+        const atEnd = at >= total - 1;
+        scrollCount.textContent = (at + 1) + " / " + total;
+        scrollNav.classList.toggle("is-spent", total < 2);
+        scrollNav.classList.toggle("is-end", atEnd);
+        scrollNav.setAttribute(
+          "aria-label",
+          atEnd ? "Back to the first project screen" : "Next project screen"
+        );
+        if (!narrowShelf.matches) syncProjectVideos(at - 1);
+      }
+
+      function syncProjectVideos(activeSlide) {
+        [...projectShots.children].forEach((slide, index) => {
+          const video = slide.querySelector("video");
+          if (!video) return;
+          if (index === activeSlide && !reducedMotion.matches) {
+            const playRequest = video.play();
+            if (playRequest) playRequest.catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      }
+
+      const BOOK_MIN_TOP = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--frame-top")
+      ) || 25;
+      const CROSS_LEFT_FROM_CENTER = 60;
+      const CROSS_TO_TEXT_GAP = 20;
+
+      function paintedBox(card) {
+        const parts = [
+          ".book", ".book-shadow", ".book-back",
+          ".page-block", ".page-fan", ".front-cover"
+        ]
+          .map((name) => card.querySelector(name))
+          .filter(Boolean)
+          .map((el) => el.getBoundingClientRect());
+
+        return {
+          left: Math.min(...parts.map((r) => r.left)),
+          top: Math.min(...parts.map((r) => r.top)),
+          right: Math.max(...parts.map((r) => r.right)),
+          bottom: Math.max(...parts.map((r) => r.bottom))
+        };
+      }
+
+      const NARROW = "(max-width: 900px)";
+
+      function clearFit(card) {
+        card.style.removeProperty("--book-scale");
+        card.style.removeProperty("--book-nudge-x");
+        card.style.removeProperty("--book-nudge-y");
+      }
+
+      function measureAndFit(card) {
+        if (window.matchMedia(NARROW).matches) {
+          clearFit(card);
+          return;
+        }
+        const rule = document.querySelector(".detail-rule").getBoundingClientRect();
+        const inset = window.innerWidth - contactButton.getBoundingClientRect().right;
+        const crossLeft = window.innerWidth / 2 - CROSS_LEFT_FROM_CENTER;
+
+        const target = {
+          left: inset,
+          right: crossLeft - CROSS_TO_TEXT_GAP,
+          top: BOOK_MIN_TOP,
+          bottom: rule.top
+        };
+        if (target.right <= target.left || target.bottom <= target.top) return;
+
+        let scale = 1;
+        let nudgeX = 0;
+        let nudgeY = 0;
+
+        const apply = () => {
+          card.style.setProperty("--book-scale", scale);
+          card.style.setProperty("--book-nudge-x", nudgeX + "px");
+          card.style.setProperty("--book-nudge-y", nudgeY + "px");
+        };
+
+        for (let pass = 0; pass < 4; pass += 1) {
+          apply();
+          const sized = paintedBox(card);
+          scale *= Math.min(
+            (target.right - target.left) / (sized.right - sized.left),
+            (target.bottom - target.top) / (sized.bottom - sized.top)
+          );
+
+          apply();
+          const placed = paintedBox(card);
+          nudgeX += target.right - placed.right;
+          nudgeY += target.bottom - placed.bottom;
+        }
+
+        apply();
+        const settled = paintedBox(card);
+        const shrink = Math.min(
+          1,
+          (target.right - target.left) / (settled.right - settled.left),
+          (target.bottom - target.top) / (settled.bottom - settled.top)
+        );
+        if (shrink < 1) {
+          scale *= shrink;
+          apply();
+          const placed = paintedBox(card);
+          nudgeX += target.right - placed.right;
+          nudgeY += target.bottom - placed.bottom;
+        }
+
+        apply();
+      }
+
+      function fitBook() {
+        const card = document.querySelector(".book-card.selected");
+        if (!card || body.dataset.mode !== "detail") return;
+        card.classList.add("is-fitting");
+        measureAndFit(card);
+        card.offsetHeight;
+        card.classList.remove("is-fitting");
+      }
+
+      window.addEventListener("resize", fitBook);
+
+      function trackMediaScroll() {
+        const selected = document.querySelector(".book-card.selected");
+        if (selected) {
+          selected.classList.add("is-tracking");
+          selected.style.setProperty(
+            "--media-shift",
+            Math.min(projectMedia.scrollTop, projectMedia.clientHeight) + "px"
+          );
+        }
+        syncScrollHint();
+      }
+
+      projectMedia.addEventListener("scroll", trackMediaScroll, { passive: true });
+
+      const MEDIA_STEP_HOLD = 460;
+      const MEDIA_GESTURE_GAP = 90;
+      let mediaIndex = 0;
+      let mediaHeldUntil = 0;
+      let mediaLastWheel = 0;
+      let mediaLastDelta = 0;
+
+      function mediaStepCount() {
+        const step = projectMedia.clientHeight;
+        if (step < 1) return 1;
+        return Math.max(1, Math.round(projectMedia.scrollHeight / step));
+      }
+
+      function mediaStep(direction) {
+        const step = projectMedia.clientHeight;
+        if (step < 1) return;
+        const from = performance.now() < mediaHeldUntil
+          ? mediaIndex
+          : Math.round(projectMedia.scrollTop / step);
+        const next = Math.max(0, Math.min(mediaStepCount() - 1, from + direction));
+        if (next === from) return;
+        mediaIndex = next;
+        projectMedia.scrollTo({ top: next * step, behavior: "smooth" });
+      }
+
+      function holdMediaStep() {
+        mediaHeldUntil = performance.now() + MEDIA_STEP_HOLD;
+      }
+
+      function isSameGesture(delta, now) {
+        return now - mediaLastWheel < MEDIA_GESTURE_GAP &&
+          Math.abs(delta) <= Math.abs(mediaLastDelta) * 1.3;
+      }
+
+      projectMedia.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        const now = performance.now();
+        const wasSameGesture = isSameGesture(event.deltaY, now);
+        const heldDown = now < mediaHeldUntil;
+        mediaLastWheel = now;
+        mediaLastDelta = wasSameGesture
+          ? Math.max(Math.abs(event.deltaY), Math.abs(mediaLastDelta) * 0.92)
+          : Math.abs(event.deltaY);
+        if (heldDown || wasSameGesture) return;
+        const direction = Math.sign(event.deltaY);
+        if (!direction) return;
+        mediaStep(direction);
+        holdMediaStep();
+      }, { passive: false });
+
+      scrollNav.addEventListener("click", () => {
+        if (performance.now() < mediaHeldUntil) return;
+        if (scrollNav.classList.contains("is-end")) {
+          mediaIndex = 0;
+          projectMedia.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          mediaStep(1);
+        }
+        holdMediaStep();
+      });
+
+      const MEDIA_NAV_GAP = 22;
+      const mediaArrows = [...mediaNav.querySelectorAll(".nav-chip")];
+
+      function mediaNavStep() {
+        return projectMedia.clientWidth + MEDIA_NAV_GAP;
+      }
+
+      function mediaNavAt() {
+        const step = mediaNavStep();
+        return step < 1 ? 0 : Math.round(projectMedia.scrollLeft / step);
+      }
+
+      function syncMediaNav() {
+        const total = projectShots.children.length;
+        const at = Math.max(0, Math.min(total - 1, mediaNavAt()));
+        if (narrowShelf.matches) syncProjectVideos(at);
+        mediaNav.hidden = total < 2;
+        if (total < 2) return;
+        if (mediaDots.children.length !== total) {
+          mediaDots.replaceChildren(
+            ...Array.from({ length: total }, () => document.createElement("i"))
+          );
+        }
+        [...mediaDots.children].forEach((dot, index) => {
+          dot.dataset.on = String(index === at);
+        });
+        mediaArrows.forEach((arrow) => {
+          const step = Number(arrow.dataset.step);
+          arrow.disabled = at + step < 0 || at + step > total - 1;
+        });
+      }
+
+      mediaArrows.forEach((arrow) => {
+        arrow.addEventListener("click", () => {
+          const next = mediaNavAt() + Number(arrow.dataset.step);
+          projectMedia.scrollTo({ left: next * mediaNavStep(), behavior: "smooth" });
+        });
+      });
+
+      projectMedia.addEventListener("scroll", () => {
+        if (narrowShelf.matches) syncMediaNav();
+      }, { passive: true });
+
+      const FLOW_FADE = 28;
+
+      function syncFlowFade() {
+        const room = stageFlow.scrollHeight - stageFlow.clientHeight;
+        const top = stageFlow.scrollTop > 2 ? FLOW_FADE : 0;
+        const bottom = room - stageFlow.scrollTop > 2 ? FLOW_FADE : 0;
+        stageFlow.style.setProperty("--fade-top", top + "px");
+        stageFlow.style.setProperty("--fade-bottom", bottom + "px");
+      }
+
+      stageFlow.addEventListener("scroll", syncFlowFade, { passive: true });
+      window.addEventListener("resize", syncFlowFade);
+
+      document.querySelector("#scrollHint").addEventListener("click", () => {
+        document.querySelector("#about").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      contactButton.addEventListener("click", () => toggleCard());
+
+      document.addEventListener("click", (event) => {
+        const toastTarget = event.target.closest("[data-toast]");
+        if (toastTarget) {
+          event.preventDefault();
+          showToast(toastTarget.dataset.toast);
+        }
+
+        if (event.target.closest("[data-card-close]")) {
+          toggleCard(false);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          if (cardOverlay.dataset.open === "true") {
+            toggleCard(false);
+          } else {
+            closeDetail();
+          }
+        }
+      });
+
+      const aboutScreen = document.querySelector(".about-screen");
+      const prefersReducedMotion =
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const PHOTO_SEQUENCE = [
+        ".about-photo-portrait",
+        ".about-photo-bike"
+      ];
+
+      const sequence = PHOTO_SEQUENCE
+        .map((selector) => document.querySelector(selector))
+        .filter(Boolean);
+
+      if (sequence.length && !prefersReducedMotion) {
+        function toMs(value) {
+          const raw = value.trim();
+          const number = parseFloat(raw);
+          if (!number) return 0;
+          return raw.endsWith("ms") ? number : number * 1000;
+        }
+
+        function timingOf(photo) {
+          const styles = getComputedStyle(photo);
+          return {
+            enter: toMs(styles.getPropertyValue("--wipe-in")),
+            hold: toMs(styles.getPropertyValue("--wipe-hold")),
+            leave: toMs(styles.getPropertyValue("--fade-out"))
+          };
+        }
+
+        sequence.forEach((photo) => photo.classList.add("is-cycling"));
+
+        let cursor = 0;
+
+        function showNext() {
+          const photo = sequence[cursor];
+          const timing = timingOf(photo);
+          cursor = (cursor + 1) % sequence.length;
+
+          photo.classList.add("is-entering");
+
+          window.setTimeout(() => {
+            photo.classList.add("is-showing");
+            photo.classList.remove("is-entering");
+
+            window.setTimeout(() => {
+              photo.classList.add("is-leaving");
+              photo.classList.remove("is-showing");
+
+              window.setTimeout(() => {
+                photo.classList.remove("is-leaving");
+                showNext();
+              }, timing.leave);
+            }, timing.hold);
+          }, timing.enter);
+        }
+
+        if (aboutScreen && "IntersectionObserver" in window) {
+          const photoObserver = new IntersectionObserver(
+            (entries) => {
+              if (!entries[0].isIntersecting) return;
+              photoObserver.disconnect();
+              showNext();
+            },
+            { threshold: 0.4 }
+          );
+          photoObserver.observe(aboutScreen);
+        } else {
+          showNext();
+        }
+      }
+    })();
+  </script>
+
+  <script src="vendor/three/office-scene.bundle.js"></script>
+</body>
+</html>

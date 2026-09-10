@@ -1,0 +1,15 @@
+{
+  "name": "daniyar-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Personal portfolio of Daniyar Kalikulov — a static page with a Three.js office scene.",
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "build:scene": "esbuild src-tools/office-scene-src.js --bundle --minify --format=iife --outfile=vendor/three/office-scene.bundle.js --allow-overwrite"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "three": "^0.185.1"
+  }
+}

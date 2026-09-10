@@ -1,0 +1,14 @@
+# dependencies — restored with `npm install`, never committed
+node_modules
+
+# editors and OS
+.idea
+.vscode
+.claude
+.DS_Store
+
+# uncropped originals and model files the site does not serve
+assets-src
+
+# logs
+*.log
