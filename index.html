@@ -45,6 +45,13 @@
       box-sizing: border-box;
     }
 
+    body[data-locked] {
+      position: fixed;
+      left: 0;
+      right: 0;
+      width: 100%;
+    }
+
     html {
       scroll-snap-type: y mandatory;
       overscroll-behavior: none;
@@ -1329,13 +1336,6 @@
 
       .nav-dots i[data-on="true"] {
         background: #0a0a0a;
-      }
-
-      body[data-locked] {
-        position: fixed;
-        left: 0;
-        right: 0;
-        width: 100%;
       }
 
       [data-mode="detail"] .stage {
@@ -2750,9 +2750,15 @@
       let lockedAt = 0;
 
       function lockPage() {
-        if (!narrowShelf.matches || body.hasAttribute("data-locked")) return;
+        if (body.hasAttribute("data-locked")) return;
         lockedAt = window.scrollY;
+        /* taking the body out of flow takes the scrollbar with it, and on the
+           platforms where that bar occupies real width the page would jump
+           sideways by exactly that much. Giving the width back as padding
+           keeps everything still. */
+        const barWidth = window.innerWidth - document.documentElement.clientWidth;
         body.style.top = -lockedAt + "px";
+        if (barWidth > 0) body.style.paddingRight = barWidth + "px";
         body.setAttribute("data-locked", "");
       }
 
@@ -2760,6 +2766,7 @@
         if (!body.hasAttribute("data-locked")) return;
         body.removeAttribute("data-locked");
         body.style.top = "";
+        body.style.paddingRight = "";
         window.scrollTo({ top: lockedAt, behavior: "instant" });
       }
       const shelf = document.querySelector(".shelf");

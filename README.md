@@ -8,7 +8,7 @@ a reading panel.
 
 ## Built with
 
-- **HTML, CSS and vanilla JavaScript** — the whole page is `index.html`
+- **HTML, CSS and JavaScript** — the whole page is `index.html`
 - **CSS 3D transforms** — the books, their covers and their pages are drawn
   with them; no images of books and no library
 - **Three.js** — the only library, for the objects orbiting the first heading
