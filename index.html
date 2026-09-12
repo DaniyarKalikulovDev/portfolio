@@ -130,6 +130,7 @@
       border: 1.5px solid #0a0a0a;
       outline: 0;
       background: var(--mint);
+      background-clip: padding-box;
       -webkit-tap-highlight-color: transparent;
       font-family: var(--font-office);
       font-size: 18px;
@@ -267,10 +268,12 @@
       padding: 0;
       border: 1.5px solid #0a0a0a;
       background: var(--mint);
+      background-clip: padding-box;
       color: #0a0a0a;
       cursor: pointer;
       outline: 0;
       transform-origin: center;
+      will-change: transform;
       transition: transform 320ms cubic-bezier(.34, 1.56, .64, 1);
       -webkit-tap-highlight-color: transparent;
     }
